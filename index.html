@@ -354,7 +354,7 @@ footer { border-top: 1px solid var(--line); padding-top: 16px; display: flex; fl
 
   <main>
     <!-- START PUZZLE -->
-    <section class="page" id="p-start">
+    <section class="page" id="p-start" hidden>
       <div class="puzzle" data-stagger>
         <p class="mono label">Entry check · balance the reaction</p>
         <h2>Balance it to enter the lab</h2>
@@ -380,14 +380,14 @@ footer { border-top: 1px solid var(--line); padding-top: 16px; display: flex; fl
         <p id="pz-msg" role="status"></p>
         <div class="links">
           <button class="btn" type="button" id="pz-hint">Give me a hint</button>
-          <a class="btn" href="#home" data-go="home">Skip the puzzle</a>
+          <a class="btn" href="#home" data-go="home">Back to home</a>
           <a class="btn primary" id="pz-enter" href="#experience" data-go="experience" hidden>Enter the lab →</a>
         </div>
       </div>
     </section>
 
     <!-- HOME -->
-    <section class="page" id="p-home" hidden>
+    <section class="page" id="p-home">
       <div class="hero">
         <div class="hero-text">
           <p class="mono label">2A Chemical Engineering · University of Waterloo · BASc 2030</p>
@@ -396,7 +396,7 @@ footer { border-top: 1px solid var(--line); padding-top: 16px; display: flex; fl
           <div class="links">
             <a class="btn primary" href="#work" data-go="work">See my projects</a>
             <a class="btn" href="#about" data-go="about">About me</a>
-            <a class="btn" href="https://github.com/imboseung-ux">GitHub</a>
+            <a class="btn" href="https://github.com/imboseung1023-ai">GitHub</a>
             <a class="btn" href="https://www.linkedin.com/in/bradley-kim-8473182b3">LinkedIn</a>
           </div>
         </div>
@@ -794,7 +794,7 @@ footer { border-top: 1px solid var(--line); padding-top: 16px; display: flex; fl
           </div>
           <div class="links">
             <a class="btn" href="https://www.linkedin.com/in/bradley-kim-8473182b3">LinkedIn</a>
-            <a class="btn" href="https://github.com/imboseung-ux">GitHub</a>
+            <a class="btn" href="https://github.com/imboseung1023-ai">GitHub</a>
           </div>
         </div>
         <svg class="flask" viewBox="0 0 120 140" role="img" aria-label="An Erlenmeyer flask whose solution turns from blue to pink">
@@ -814,7 +814,7 @@ footer { border-top: 1px solid var(--line); padding-top: 16px; display: flex; fl
 
   <footer class="mono">
     <span>Bk is also berkelium, element 97. Outside the lab: hackathons, chess and soccer.</span>
-    <span>Use the ← → keys to change pages. <a href="#start" data-go="start">Replay the puzzle</a></span>
+    <span>Use the ← → keys to change pages. <a href="#start" data-go="start">Play the lab puzzle</a></span>
   </footer>
 </div>
 
@@ -897,7 +897,7 @@ footer { border-top: 1px solid var(--line); padding-top: 16px; display: flex; fl
     if (e.key === 'ArrowLeft' && i > 1) go(pages[i - 1]);
   });
   var start = location.hash.slice(1);
-  show(pages.indexOf(start) >= 0 ? start : 'start');
+  show(pages.indexOf(start) >= 0 && start !== 'start' ? start : 'home');
 
   /* ---------- entry puzzle: balance CH4 + O2 -> CO2 + H2O ---------- */
   var co = [1, 1, 1, 1], solved = false;
