@@ -1,0 +1,1123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Portfolio of Bradley Kim, Chemical Engineering student at the University of Waterloo: process simulation, reaction chemistry, controls and programming projects.">
+<style>[hidden]{display:none!important}img{max-width:100%}html{color-scheme:light}</style>
+<title>Bradley Kim Portfolio</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a lab notebook on graph paper with molecules drifting behind it. An entry puzzle, then six pages (home, about, work, experience, skills, contact) swap through a rising-liquid transition. */
+:root {
+  --bg: #eef3f5;
+  --grid: #dfe8ec;
+  --surface: #fbfdfe;
+  --ink: #11263a;
+  --muted: #51667a;
+  --line: #c3d1da;
+  --blue: #1257b8;   /* copper sulfate solution */
+  --pink: #b8165e;   /* phenolphthalein at endpoint */
+  --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b1620; --grid: #122230; --surface: #122130; --ink: #e1ebf1;
+    --muted: #93a7b7; --line: #2a3f51; --blue: #6cb2f5; --pink: #f27bb0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b1620; --grid: #122230; --surface: #122130; --ink: #e1ebf1;
+  --muted: #93a7b7; --line: #2a3f51; --blue: #6cb2f5; --pink: #f27bb0;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 1rem;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+#molecules { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.wrap {
+  position: relative; z-index: 1;
+  max-width: 68rem;
+  margin: 0 auto;
+  padding-inline: clamp(16px, 4vw, 40px);
+  padding-block: 20px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(36px, 6vw, 64px);
+}
+a { color: var(--blue); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
+h1, h2, h3, p, ul, figure { margin: 0; }
+ul { padding: 0; list-style: none; }
+.mono { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--muted); }
+.label { text-transform: uppercase; letter-spacing: 0.12em; }
+
+/* nav */
+nav { display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center; justify-content: space-between; }
+.tile-logo {
+  display: inline-grid; width: 56px; height: 56px;
+  border: 2px solid var(--ink); background: var(--surface);
+  padding: 4px 6px; text-decoration: none; color: var(--ink); line-height: 1;
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+}
+.tile-logo:hover { transform: translate(-3px, -3px) rotate(-4deg); box-shadow: 5px 5px 0 var(--pink); }
+.tile-logo small { font-family: var(--mono); font-size: 0.62rem; color: var(--muted); }
+.tile-logo b { font-family: var(--display); font-weight: 800; font-size: 1.75rem; align-self: end; }
+nav ul { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+nav ul a {
+  font-family: var(--mono); font-size: 0.82rem; color: var(--ink); text-decoration: none;
+  padding-block: 4px; border-bottom: 2px solid transparent; transition: border-color .2s, color .2s;
+}
+nav ul a:hover { color: var(--blue); border-color: var(--blue); }
+nav ul a[aria-current="page"] { color: var(--pink); border-color: var(--pink); }
+
+/* pages */
+.page { display: flex; flex-direction: column; gap: 28px; min-height: 62vh; }
+@keyframes rise { from { opacity: 0; transform: translateY(28px); } }
+@keyframes flip { from { opacity: 0; transform: perspective(600px) rotateY(88deg); } }
+@keyframes slide { from { opacity: 0; transform: translateX(-28px); } }
+@keyframes grow { from { transform: scaleY(0); } }
+@keyframes letter { from { transform: translateY(110%) rotate(9deg); } }
+[data-stagger] > * { animation: rise .7s var(--ease) both; animation-delay: calc(var(--i, 0) * 70ms + 280ms); }
+
+/* home */
+.hero { display: grid; gap: 40px; align-items: center; flex: 1; }
+@media (min-width: 900px) { .hero { grid-template-columns: 1fr 1.15fr; } }
+.hero > * { min-width: 0; }
+.hero-text { display: flex; flex-direction: column; gap: 20px; }
+h1 {
+  font-family: var(--display); font-weight: 800; text-transform: uppercase;
+  font-size: clamp(3.6rem, 12vw, 7.25rem); line-height: 0.88; letter-spacing: 0.005em;
+}
+h1 .ln { display: block; overflow: hidden; padding-top: 0.06em; }
+h1 .ln.kim { color: var(--blue); }
+h1 .ch { display: inline-block; animation: letter .85s var(--ease) both; animation-delay: calc(var(--i, 0) * 55ms + 200ms); }
+.pitch { font-size: 1.2rem; line-height: 1.5; max-width: 30rem; }
+.links { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn {
+  font-family: var(--mono); font-size: 0.85rem; text-decoration: none;
+  padding: 10px 16px; border: 1.5px solid var(--ink); color: var(--ink);
+  background: var(--surface); cursor: pointer;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), background .2s, color .2s;
+}
+.btn:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--pink); }
+.btn.primary { background: var(--blue); border-color: var(--blue); color: var(--bg); }
+
+/* flowsheet figure */
+.pfd { background: var(--surface); border: 1.5px solid var(--ink); animation: rise .9s var(--ease) both; animation-delay: .5s; }
+.pfd-scroll { overflow-x: auto; }
+.pfd svg { display: block; width: 100%; min-width: 520px; height: auto; }
+.pfd text { font-family: var(--mono); font-size: 10px; fill: var(--muted); }
+.pfd text.unit { fill: var(--ink); font-weight: 500; font-size: 11px; letter-spacing: 0.08em; }
+.vessel { fill: var(--bg); stroke: var(--ink); stroke-width: 1.5; }
+.tray { stroke: var(--line); stroke-width: 1; fill: none; }
+.stream { fill: none; stroke-width: 1.75; stroke-dasharray: 5 7; animation: flow 1.1s linear infinite; }
+.s-gas { stroke: var(--muted); } .s-amine { stroke: var(--blue); } .s-co2 { stroke: var(--pink); }
+.m-gas { fill: var(--muted); } .m-amine { fill: var(--blue); } .m-co2 { fill: var(--pink); }
+@keyframes flow { to { stroke-dashoffset: -12; } }
+figcaption { border-top: 1.5px solid var(--ink); padding: 12px 16px; display: flex; flex-direction: column; gap: 4px; }
+figcaption .rxn { font-family: var(--mono); font-size: 0.85rem; color: var(--ink); overflow-wrap: anywhere; }
+
+/* about */
+.about { display: grid; gap: 32px; }
+@media (min-width: 820px) { .about { grid-template-columns: 1.25fr 1fr; gap: 48px; } }
+.about > * { min-width: 0; }
+.bio { display: flex; flex-direction: column; gap: 16px; max-width: 38rem; }
+.bio .lead { font-size: 1.35rem; line-height: 1.4; font-weight: 500; }
+.specs { display: flex; flex-direction: column; gap: 16px; }
+.spec { background: var(--surface); border: 1px solid var(--line); border-left: 0; border-right: 0; border-top: 1.5px solid var(--ink); padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.spec h3 { font-weight: 500; color: var(--pink); }
+.spec ul { display: flex; flex-direction: column; gap: 6px; font-size: 0.95rem; }
+.spec li { display: flex; flex-wrap: wrap; gap: 2px 12px; justify-content: space-between; }
+
+/* entry puzzle */
+.puzzle { display: flex; flex-direction: column; gap: 22px; align-items: flex-start; margin-block: auto; }
+.puzzle > p { max-width: 36rem; }
+.eq { display: flex; flex-wrap: wrap; align-items: center; gap: 10px clamp(8px, 2.5vw, 22px); background: var(--surface); border: 1.5px solid var(--ink); padding: clamp(14px, 3vw, 26px); max-width: 100%; }
+.term { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.term button { width: 40px; height: 30px; font-family: var(--mono); font-size: 1rem; border: 1.5px solid var(--ink); background: var(--bg); color: var(--ink); cursor: pointer; transition: background .15s, color .15s, transform .15s; }
+.term button:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+.term button:active:not(:disabled) { transform: scale(.9); }
+.term button:disabled { opacity: .35; cursor: default; }
+.term output { font-family: var(--display); font-weight: 800; font-size: clamp(2.4rem, 9vw, 4rem); line-height: 1; color: var(--blue); min-width: 1.2ch; text-align: center; }
+.term output.pop { animation: pop .3s var(--ease); }
+@keyframes pop { from { transform: scale(1.5); color: var(--pink); } }
+.term .formula { font-family: var(--mono); font-size: 1.05rem; }
+.eq .op { font-family: var(--display); font-weight: 600; font-size: clamp(1.6rem, 6vw, 2.6rem); color: var(--muted); }
+.scale { width: min(100%, 22rem); display: flex; flex-direction: column; align-items: center; padding-top: 26px; }
+.beam { position: relative; width: 100%; height: 4px; background: var(--ink); transition: transform .6s cubic-bezier(.3, 1.6, .5, 1), background .3s; }
+.beam span { position: absolute; top: 4px; padding: 4px 10px; border: 1.5px solid var(--ink); border-top: 0; background: var(--surface); font-family: var(--mono); font-size: 0.75rem; white-space: nowrap; }
+.beam span:first-child { left: 0; } .beam span:last-child { right: 0; }
+.pivot { width: 0; height: 0; border: 16px solid transparent; border-top: 0; border-bottom: 26px solid var(--ink); margin-top: 0; }
+.solved .beam { background: var(--pink); }
+.tally { display: flex; flex-wrap: wrap; gap: 10px; }
+.tally li { font-family: var(--mono); font-size: 0.9rem; padding: 6px 12px; border: 1.5px solid var(--ink); background: var(--surface); transition: background .3s, color .3s, border-color .3s; }
+.tally li.ok { background: var(--blue); border-color: var(--blue); color: var(--bg); }
+#pz-msg { font-family: var(--mono); font-size: 0.9rem; min-height: 1.6em; color: var(--pink); }
+
+/* formula ticker */
+.ticker { overflow: hidden; border-block: 1.5px solid var(--ink); padding-block: 10px; animation: rise .8s var(--ease) both; animation-delay: .8s; }
+.ticker-run { display: flex; width: max-content; animation: tick 38s linear infinite; }
+.ticker-run div { display: flex; gap: 56px; padding-right: 56px; font-family: var(--display); font-weight: 600; font-size: 1.5rem; letter-spacing: 0.04em; white-space: nowrap; color: var(--muted); }
+.ticker-run span:nth-child(odd) { color: var(--ink); }
+@keyframes tick { to { transform: translateX(-50%); } }
+
+/* languages */
+.langs { display: flex; flex-direction: column; gap: 18px; border-top: 1.5px solid var(--ink); padding-top: 20px; }
+.langs h3 { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(1.8rem, 5vw, 2.6rem); line-height: 1; }
+.tubes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 34rem; }
+.lang { display: flex; flex-direction: column; gap: 10px; min-width: 0; animation: rise .7s var(--ease) both; animation-delay: calc(var(--i, 0) * 120ms + 400ms); }
+.tube { position: relative; width: 46px; height: 150px; border: 2px solid var(--ink); border-radius: 6px 6px 23px 23px; background: var(--bg); overflow: hidden; }
+.tube i { position: absolute; left: 0; right: 0; bottom: 0; height: var(--lvl); background: var(--blue); animation: fillup 1.6s var(--ease) both; animation-delay: calc(var(--i, 0) * 120ms + 700ms); }
+.tube i::before { content: ""; position: absolute; left: 0; right: 0; top: -3px; height: 6px; border-radius: 50%; background: var(--pink); }
+@keyframes fillup { from { height: 0; } }
+.lang b { font-size: 1.05rem; font-weight: 600; }
+.lang b, .lang span { overflow-wrap: anywhere; }
+
+/* page heads */
+.head { display: flex; flex-direction: column; gap: 6px; border-bottom: 1.5px solid var(--ink); padding-bottom: 12px; animation: rise .7s var(--ease) both; animation-delay: .2s; }
+h2 { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(2.6rem, 8vw, 5rem); line-height: 0.95; text-wrap: balance; }
+.head p { color: var(--muted); max-width: 40rem; }
+.next { align-self: flex-end; margin-top: auto; }
+
+/* featured project */
+.feature { background: var(--surface); border: 1.5px solid var(--ink); padding: clamp(16px, 3.5vw, 36px); display: flex; flex-direction: column; gap: 28px; animation: rise .8s var(--ease) both; animation-delay: .3s; }
+.feature-top { display: flex; flex-direction: column; gap: 10px; }
+.feature-top h3 { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(3rem, 11vw, 6rem); line-height: .9; color: var(--blue); }
+.feature-top h3 span { display: block; font-size: clamp(1.3rem, 4vw, 2rem); font-weight: 600; color: var(--ink); letter-spacing: .03em; margin-top: 6px; }
+.feature .lead { font-size: 1.2rem; line-height: 1.45; max-width: 38rem; }
+.line-fig { border: 1.5px solid var(--ink); background: var(--bg); overflow: hidden; }
+.line-fig svg { display: block; width: 100%; height: auto; }
+.line-fig figcaption { border-top: 1.5px solid var(--ink); padding: 10px 14px; background: var(--surface); }
+.line-fig text { font-family: var(--mono); font-size: 11px; fill: var(--muted); }
+.pole { fill: var(--ink); } .wire { stroke: var(--ink); stroke-width: 3; fill: none; }
+.ice { fill: var(--blue); opacity: .75; animation: drop 8s linear infinite; }
+@keyframes drop { 0% { transform: translateY(0); opacity: .75; } 7% { transform: translateY(90px) rotate(20deg); opacity: 0; } 88% { transform: translateY(0) scaleY(0); opacity: 0; } 100% { transform: translateY(0) scaleY(1); opacity: .75; } }
+.ice { transform-box: fill-box; transform-origin: top center; }
+.bot { animation: crawl 8s linear infinite; transform: translateX(70px); }
+@keyframes crawl { from { transform: translateX(70px); } to { transform: translateX(730px); } }
+.bot-frame { fill: var(--surface); stroke: var(--ink); stroke-width: 2.5; } .bot-box { fill: var(--ink); }
+.wheel { transform-box: fill-box; transform-origin: center; animation: spin 1s linear infinite; }
+.wheel circle { fill: var(--pink); stroke: var(--ink); stroke-width: 2; } .wheel path { stroke: var(--ink); stroke-width: 2; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.feature-body { display: grid; gap: 32px; }
+@media (min-width: 900px) { .feature-body { grid-template-columns: 1fr 1.1fr; gap: 44px; align-items: start; } }
+.feature-body > * { min-width: 0; }
+.steps { list-style: none; margin: 0; padding: 0 0 0 26px; position: relative; display: flex; flex-direction: column; gap: 20px; counter-reset: st; }
+.steps::before { content: ""; position: absolute; left: 5px; top: 6px; bottom: 6px; width: 2px; background: var(--ink); transform-origin: top; animation: grow 1.6s var(--ease) both; animation-delay: .6s; }
+.steps li { position: relative; animation: slide .7s var(--ease) both; animation-delay: calc(var(--i, 0) * 130ms + 600ms); }
+.steps li::before { content: ""; position: absolute; left: -26px; top: 7px; width: 12px; height: 12px; border-radius: 50%; background: var(--surface); border: 2px solid var(--pink); }
+.steps h4 { margin: 0; font-family: var(--display); font-weight: 600; text-transform: uppercase; font-size: 1.35rem; line-height: 1.1; }
+.steps p { font-size: .95rem; margin-top: 4px; }
+.figs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+.fig { grid-column: span 2; background: var(--bg); border: 1.5px solid var(--ink); padding: 7px 7px 0; display: flex; flex-direction: column; min-width: 0;
+  animation: develop 1.5s ease-out both; animation-delay: calc(var(--i, 0) * 180ms + 700ms); transition: transform .3s var(--ease), box-shadow .3s var(--ease); }
+.fig.big { grid-column: span 3; }
+.fig:nth-child(odd) { rotate: -1.2deg; } .fig:nth-child(even) { rotate: 1deg; }
+.fig:hover { transform: scale(1.05); box-shadow: 7px 7px 0 var(--pink); z-index: 2; rotate: 0deg; }
+.fig img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
+.fig.big img { aspect-ratio: 4 / 5; }
+.fig figcaption { padding: 7px 2px 8px; font-size: .68rem; line-height: 1.35; overflow-wrap: anywhere; }
+@keyframes develop { from { opacity: 0; filter: blur(14px) saturate(0) brightness(1.7); transform: translateY(18px) scale(1.04); } 40% { opacity: 1; } }
+@media (max-width: 520px) { .fig { grid-column: span 3; } .fig:last-child { grid-column: span 6; } .fig:last-child img { aspect-ratio: 16 / 9; } }
+.fig.full { grid-column: span 6; } .fig.full img { aspect-ratio: 16 / 9; } .fig.full video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: var(--ink); }
+.figs.charts .fig.big img { aspect-ratio: 2 / 1; object-fit: contain; background: #fff; }
+@media (max-width: 520px) { .figs.charts .fig { grid-column: span 6; } }
+.axis { fill: none; stroke: var(--ink); stroke-width: 2; } .setpt { stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 5 6; fill: none; }
+.tr { fill: none; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; animation: trace 7s ease-in-out infinite; }
+.tr-sensor { stroke: var(--muted); stroke-width: 2; } .tr-base { stroke: var(--pink); } .tr-ours { stroke: var(--blue); }
+@keyframes trace { 0% { stroke-dashoffset: 1; } 60%, 92% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 1; } }
+.line-fig text.t-ours { fill: var(--blue); } .line-fig text.t-base { fill: var(--pink); }
+.figs.wide .fig.big img { aspect-ratio: 4 / 3; }
+.fig img { cursor: zoom-in; } .fig img.top { object-position: top; }
+.line-fig .eqn { font-size: 21px; fill: var(--ink); font-weight: 500; }
+.rx { animation: react 7s ease-in-out infinite; }
+@keyframes react { 0% { fill-opacity: .12; } 9%, 82% { fill-opacity: 1; } 100% { fill-opacity: .12; } }
+.sbub { fill: none; stroke: var(--blue); stroke-width: 1.5; opacity: .5; animation: floatup 7s linear infinite; }
+.sbub:nth-child(3n) { stroke: var(--pink); }
+@keyframes floatup { to { transform: translateY(-240px); } }
+.ph { fill: var(--line); } .ph.on { fill: var(--pink); animation: pulse 1.6s ease-in-out infinite alternate; }
+@keyframes pulse { from { opacity: .55; } }
+.chute, .bin { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; }
+.sensor { fill: var(--surface); stroke: var(--ink); stroke-width: 2.5; }
+.beam-ray { stroke: var(--pink); stroke-width: 2; stroke-dasharray: 3 4; animation: flow .6s linear infinite; }
+.marble { stroke: var(--ink); stroke-width: 1.5; transform: translate(90px, 45px); animation: 6s linear infinite; }
+.marble.mb { fill: var(--blue); animation-name: sortL; } .marble.mp { fill: var(--pink); animation-name: sortR; }
+@keyframes sortL { 0% { transform: translate(90px, 45px); opacity: 0; } 5% { opacity: 1; } 50%, 58% { transform: translate(400px, 84px); } 85% { transform: translate(296px, 126px); } 96% { transform: translate(296px, 168px); opacity: 1; } 100% { transform: translate(296px, 168px); opacity: 0; } }
+@keyframes sortR { 0% { transform: translate(90px, 45px); opacity: 0; } 5% { opacity: 1; } 50%, 58% { transform: translate(400px, 84px); } 85% { transform: translate(504px, 126px); } 96% { transform: translate(504px, 168px); opacity: 1; } 100% { transform: translate(504px, 168px); opacity: 0; } }
+#lightbox { position: fixed; inset: 0; z-index: 60; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 16px; cursor: zoom-out; }
+#lightbox img { max-width: 100%; max-height: 80vh; object-fit: contain; border: 1.5px solid var(--ink); background: var(--surface); animation: develop .6s ease-out both; }
+.more { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(1.8rem, 5vw, 2.6rem); line-height: 1; border-top: 1.5px solid var(--ink); padding-top: 20px; }
+
+/* work */
+.work { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); }
+.card {
+  background: var(--surface); border: 1px solid var(--line);
+  padding: 20px; display: flex; flex-direction: column; gap: 12px; min-width: 0;
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s;
+}
+.card:hover { transform: translate(-4px, -4px); border-color: var(--ink); box-shadow: 7px 7px 0 var(--blue); }
+.card h3 { font-family: var(--display); font-weight: 600; font-size: 1.6rem; line-height: 1.05; text-transform: uppercase; text-wrap: balance; }
+.card p { font-size: 0.95rem; }
+.card .rxn { margin-top: auto; padding-top: 12px; border-top: 1px dashed var(--line); font-family: var(--mono); font-size: 0.76rem; color: var(--ink); overflow-wrap: anywhere; }
+.k-process { color: var(--blue); } .k-code { color: var(--pink); }
+
+/* experience */
+.xp { position: relative; display: flex; flex-direction: column; padding-left: 30px; }
+.xp::before { content: ""; position: absolute; left: 5px; top: 8px; bottom: 8px; width: 2px; background: var(--ink); transform-origin: top; animation: grow 1.4s var(--ease) both; animation-delay: .3s; }
+.xp li { position: relative; display: grid; gap: 4px 24px; padding-block: 16px; border-bottom: 1px solid var(--line); animation: slide .7s var(--ease) both; animation-delay: calc(var(--i, 0) * 110ms + 350ms); }
+.xp li::before { content: ""; position: absolute; left: -30px; top: 22px; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); border: 2px solid var(--pink); }
+@media (min-width: 720px) { .xp li { grid-template-columns: 11rem 1fr; } }
+.xp li > * { min-width: 0; }
+.xp h3 { font-size: 1.08rem; font-weight: 600; }
+.xp .org { color: var(--muted); font-size: 0.95rem; }
+.xp p { max-width: 42rem; font-size: 0.95rem; margin-top: 6px; }
+
+/* skills */
+.legend { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+.legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 8px; background: currentColor; }
+.elements { display: grid; gap: 10px; grid-template-columns: repeat(3, 1fr); }
+@media (min-width: 720px) { .elements { grid-template-columns: repeat(5, 1fr); } }
+.el {
+  background: var(--surface); border: 1.5px solid currentColor; color: var(--ink);
+  padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; min-width: 0;
+  animation: flip .6s var(--ease) both; animation-delay: calc(var(--i, 0) * 60ms + 300ms);
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+.el:hover { transform: translate(-3px, -3px) scale(1.04); box-shadow: 5px 5px 0 currentColor; }
+.el.k-process { color: var(--blue); } .el.k-code { color: var(--pink); }
+.el b { font-family: var(--display); font-weight: 800; font-size: 2.1rem; line-height: 1; }
+.el span { font-size: 0.82rem; color: var(--ink); line-height: 1.25; overflow-wrap: anywhere; }
+
+/* contact */
+.contact { background: var(--surface); border: 1.5px solid var(--ink); padding: clamp(20px, 4vw, 36px); display: grid; gap: 28px; align-items: center; animation: rise .8s var(--ease) both; animation-delay: .3s; }
+@media (min-width: 720px) { .contact { grid-template-columns: 1fr auto; } }
+.contact > div { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.email-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.email { font-family: var(--mono); font-size: clamp(1rem, 3.4vw, 1.4rem); user-select: all; overflow-wrap: anywhere; }
+.flask { width: 130px; height: auto; justify-self: center; }
+.flask .glass { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linejoin: round; }
+.flask .liquid { fill: var(--blue); animation: titrate 5s ease-in-out infinite alternate; }
+.flask .bub { fill: var(--surface); animation: bub 2.4s ease-in infinite; }
+.flask .bub:nth-of-type(2) { animation-delay: .8s; } .flask .bub:nth-of-type(3) { animation-delay: 1.5s; }
+@keyframes titrate { 0%, 35% { fill: var(--blue); } 65%, 100% { fill: var(--pink); } }
+@keyframes bub { from { transform: translateY(0); opacity: 1; } to { transform: translateY(-34px); opacity: 0; } }
+
+footer { border-top: 1px solid var(--line); padding-top: 16px; display: flex; flex-wrap: wrap; gap: 6px 24px; justify-content: space-between; }
+
+/* liquid page transition */
+.wipe { position: fixed; inset: 0; z-index: 50; pointer-events: none; overflow: hidden; }
+.wipe .layer { position: absolute; left: -5%; top: 0; width: 110%; height: 125%; transform: translateY(100%); border-radius: 50% / 9vh; }
+.wipe .w1 { background: var(--pink); } .wipe .w2 { background: var(--blue); }
+.wipe .wipe-label {
+  position: absolute; inset: 0; display: grid; place-items: center; opacity: 0;
+  font-family: var(--display); font-weight: 800; text-transform: uppercase;
+  font-size: clamp(3.5rem, 16vw, 11rem); color: var(--bg); letter-spacing: 0.02em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="molecules" aria-hidden="true"></canvas>
+
+<div class="wrap">
+  <nav aria-label="Pages">
+    <a class="tile-logo" href="#home" data-go="home" aria-label="Bradley Kim, home"><small>97</small><b>Bk</b></a>
+    <ul>
+      <li><a href="#about" data-go="about">About</a></li>
+      <li><a href="#work" data-go="work">Projects</a></li>
+      <li><a href="#experience" data-go="experience">Experience</a></li>
+      <li><a href="#skills" data-go="skills">Skills</a></li>
+      <li><a href="#contact" data-go="contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <!-- START PUZZLE -->
+    <section class="page" id="p-start">
+      <div class="puzzle" data-stagger>
+        <p class="mono label">Entry check · balance the reaction</p>
+        <h2>Balance it to enter the lab</h2>
+        <p>Methane burns in oxygen. Set the four coefficients so every atom on the left also appears on the right, and the lab door opens to my experience.</p>
+        <div class="eq" id="pz-eq">
+          <div class="term"><button type="button" data-t="0" data-d="1" aria-label="Increase methane coefficient">+</button><output id="pz-c0">1</output><button type="button" data-t="0" data-d="-1" aria-label="Decrease methane coefficient">−</button><span class="formula">CH₄</span></div>
+          <span class="op" aria-hidden="true">+</span>
+          <div class="term"><button type="button" data-t="1" data-d="1" aria-label="Increase oxygen coefficient">+</button><output id="pz-c1">1</output><button type="button" data-t="1" data-d="-1" aria-label="Decrease oxygen coefficient">−</button><span class="formula">O₂</span></div>
+          <span class="op" aria-label="yields">→</span>
+          <div class="term"><button type="button" data-t="2" data-d="1" aria-label="Increase carbon dioxide coefficient">+</button><output id="pz-c2">1</output><button type="button" data-t="2" data-d="-1" aria-label="Decrease carbon dioxide coefficient">−</button><span class="formula">CO₂</span></div>
+          <span class="op" aria-hidden="true">+</span>
+          <div class="term"><button type="button" data-t="3" data-d="1" aria-label="Increase water coefficient">+</button><output id="pz-c3">1</output><button type="button" data-t="3" data-d="-1" aria-label="Decrease water coefficient">−</button><span class="formula">H₂O</span></div>
+        </div>
+        <div class="scale" aria-hidden="true">
+          <div class="beam" id="pz-beam"><span id="pz-l">7 atoms</span><span id="pz-r">6 atoms</span></div>
+          <div class="pivot"></div>
+        </div>
+        <ul class="tally" id="pz-tally" aria-label="Atom count, reactants versus products">
+          <li id="pz-C">C 1 = 1</li>
+          <li id="pz-H">H 4 ≠ 2</li>
+          <li id="pz-O">O 2 ≠ 3</li>
+        </ul>
+        <p id="pz-msg" role="status"></p>
+        <div class="links">
+          <button class="btn" type="button" id="pz-hint">Give me a hint</button>
+          <a class="btn" href="#home" data-go="home">Skip the puzzle</a>
+          <a class="btn primary" id="pz-enter" href="#experience" data-go="experience" hidden>Enter the lab →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOME -->
+    <section class="page" id="p-home" hidden>
+      <div class="hero">
+        <div class="hero-text">
+          <p class="mono label">2A Chemical Engineering · University of Waterloo · BASc 2030</p>
+          <h1 aria-label="Bradley Kim"><span class="ln">Bradley</span><span class="ln kim">Kim</span></h1>
+          <p class="pitch">I'm a chemical engineering student who simulates separation processes and ships AI automation that runs in production.</p>
+          <div class="links">
+            <a class="btn primary" href="#work" data-go="work">See my projects</a>
+            <a class="btn" href="#about" data-go="about">About me</a>
+            <a class="btn" href="https://github.com/imboseung-ux">GitHub</a>
+            <a class="btn" href="https://www.linkedin.com/in/bradley-kim-8473182b3">LinkedIn</a>
+          </div>
+        </div>
+
+        <figure class="pfd">
+          <div class="pfd-scroll">
+            <svg viewBox="0 0 560 360" role="img" aria-label="Process flow diagram of a post-combustion carbon dioxide capture plant: flue gas enters an absorber, rich amine goes through a heat exchanger to a stripper, lean amine returns, and carbon dioxide is flashed and compressed in two stages.">
+              <defs>
+                <marker id="a-gas" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path class="m-gas" d="M0,0 L9,4 L0,8 z"/></marker>
+                <marker id="a-amine" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path class="m-amine" d="M0,0 L9,4 L0,8 z"/></marker>
+                <marker id="a-co2" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path class="m-co2" d="M0,0 L9,4 L0,8 z"/></marker>
+              </defs>
+              <path class="stream s-gas" d="M10,240 H90" marker-end="url(#a-gas)"/>
+              <path class="stream s-gas" d="M118,70 V36 H184" marker-end="url(#a-gas)"/>
+              <path class="stream s-amine" d="M118,270 V330 H270 V313"/>
+              <path class="stream s-amine" d="M270,287 V190 H302" marker-end="url(#a-amine)"/>
+              <path class="stream s-amine" d="M330,270 V300 H283"/>
+              <path class="stream s-amine" d="M257,300 H200 V100 H146" marker-end="url(#a-amine)"/>
+              <path class="stream s-co2" d="M330,110 V60 H400" marker-end="url(#a-co2)"/>
+              <path class="stream s-co2" d="M428,60 H452"/>
+              <path class="stream s-co2" d="M474,60 H490"/>
+              <path class="stream s-co2" d="M512,60 H550" marker-end="url(#a-co2)"/>
+              <rect class="vessel" x="90" y="70" width="56" height="200" rx="28"/>
+              <path class="tray" d="M96,120 H140 M96,150 H140 M96,180 H140 M96,210 H140"/>
+              <rect class="vessel" x="302" y="110" width="56" height="160" rx="28"/>
+              <path class="tray" d="M308,160 H352 M308,190 H352 M308,220 H352"/>
+              <circle class="vessel" cx="270" cy="300" r="13"/>
+              <text x="270" y="303.5" text-anchor="middle">HX</text>
+              <rect class="vessel" x="400" y="42" width="28" height="36" rx="14"/>
+              <polygon class="vessel" points="452,46 474,53 474,67 452,74"/>
+              <polygon class="vessel" points="490,46 512,53 512,67 490,74"/>
+              <text class="unit" x="80" y="150" text-anchor="end">ABSORBER</text>
+              <text x="80" y="165" text-anchor="end">RadFrac</text>
+              <text class="unit" x="368" y="190">STRIPPER</text>
+              <text x="368" y="205">Amine regeneration</text>
+              <text x="10" y="231">Flue gas</text>
+              <text x="126" y="27">Treated gas</text>
+              <text x="130" y="347">Rich MEA</text>
+              <text x="208" y="200">Lean MEA</text>
+              <text x="414" y="96" text-anchor="middle">Flash</text>
+              <text x="482" y="96" text-anchor="middle">Comp. ×2</text>
+              <text x="550" y="34" text-anchor="end">CO₂ product</text>
+            </svg>
+          </div>
+          <figcaption>
+            <span class="mono">Fig. 1. The CO₂ capture flowsheet I simulated in Aspen Plus V14.</span>
+            <span class="rxn">2 RNH₂ + CO₂ ⇌ RNHCOO⁻ + RNH₃⁺</span>
+          </figcaption>
+        </figure>
+      </div>
+      <div class="ticker" aria-hidden="true"><div class="ticker-run"><div><span>In − Out + Generation − Consumption = Accumulation</span><span>PV = nRT</span><span>2 RNH₂ + CO₂ ⇌ RNHCOO⁻ + RNH₃⁺</span><span>Re = ρvD / μ</span><span>NaOH + HCl → NaCl + H₂O</span><span>ΔG = ΔH − TΔS</span><span>triglyceride + 3 NaOH → glycerol + 3 RCOONa</span></div><div><span>In − Out + Generation − Consumption = Accumulation</span><span>PV = nRT</span><span>2 RNH₂ + CO₂ ⇌ RNHCOO⁻ + RNH₃⁺</span><span>Re = ρvD / μ</span><span>NaOH + HCl → NaCl + H₂O</span><span>ΔG = ΔH − TΔS</span><span>triglyceride + 3 NaOH → glycerol + 3 RCOONa</span></div></div></div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="page" id="p-about" hidden>
+      <div class="head">
+        <h2>About</h2>
+      </div>
+      <div class="about">
+        <div class="bio" data-stagger>
+          <p class="lead">I'm in 2A Chemical Engineering at the University of Waterloo, graduating in May 2030.</p>
+          <p>Most of my engineering work so far is in separation processes and reaction chemistry. In CHE 290 I built an Aspen Plus V14 simulation of post-combustion CO₂ capture: an MEA absorber, amine regeneration, flash separation and two-stage compression. I compared property methods and calculated percent capture, steam duty and annualized operating cost.</p>
+          <p>At the bench I'm comfortable with solution preparation, titration, reagent handling and material balance calculations. I led a team that made soap by saponification and kept every batch between pH 8 and 10, and I'm on the chemistry team of the University of Waterloo NanoRobotics Group.</p>
+          <p>I also program. I write Python, build data pipelines and automation, and use code to get engineering work done faster.</p>
+        </div>
+        <div class="specs" data-stagger>
+          <div class="spec">
+            <h3 class="mono label">Certifications</h3>
+            <ul>
+              <li>Certified Customer Service Professional (CCSP)</li>
+              <li>CPR / AED / First Aid</li>
+              <li>Avogadro Exam, certificate of participation</li>
+              <li>Canadian Computing Competition</li>
+              <li>Financial Literacy Competition certificate</li>
+            </ul>
+          </div>
+          <div class="spec">
+            <h3 class="mono label">Safety training</h3>
+            <ul>
+              <li>WHMIS <span class="mono">SO2017 · 2026</span></li>
+              <li>Laboratory Safety <span class="mono">SO1010</span></li>
+              <li>Safe Chemical Handling <span class="mono">SO2032</span></li>
+              <li>Chemical Waste Segregation <span class="mono">SO2070</span></li>
+              <li>Employee Safety Orientation <span class="mono">SO1001 · 2026</span></li>
+              <li>Worker Health &amp; Safety Awareness in 4 Steps <span class="mono">SO3000</span></li>
+              <li>Workplace Violence &amp; Harassment Awareness <span class="mono">SO1081 · 2026</span></li>
+              <li>Accessibility Training <span class="mono">2026</span></li>
+            </ul>
+          </div>
+          <div class="spec">
+            <h3 class="mono label">Awards</h3>
+            <ul>
+              <li>Eden Citizenship Award</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="langs">
+        <h3>Languages</h3>
+        <div class="tubes" data-index>
+          <div class="lang"><div class="tube" style="--lvl: 94%"><i></i></div><b>English</b><span class="mono">Native or bilingual</span></div>
+          <div class="lang"><div class="tube" style="--lvl: 94%"><i></i></div><b>Korean · 한국어</b><span class="mono">Native or bilingual</span></div>
+          <div class="lang"><div class="tube" style="--lvl: 38%"><i></i></div><b>French · Français</b><span class="mono">Limited working</span></div>
+        </div>
+      </div>
+      <a class="btn next" href="#work" data-go="work">Next: Projects →</a>
+    </section>
+
+    <!-- WORK -->
+    <section class="page" id="p-work" hidden>
+      <div class="head">
+        <h2>Projects</h2>
+        <p>Things I've designed, built and simulated, from a reactor controller to a bar of coffee soap.</p>
+      </div>
+
+      <article class="feature">
+        <div class="feature-top">
+          <p class="mono label k-code">2026 Nuclear Innovation Challenge · Controls and instrumentation</p>
+          <h3>Self-Checking Reactor Controller <span>Simulated reactor control plus a dye concentration rig</span></h3>
+          <p class="lead">A reactor power controller that catches its own drifting sensor, tested in simulation and paired with a bench rig that doses dye and measures concentration optically.</p>
+        </div>
+        <figure class="line-fig">
+          <svg viewBox="0 0 800 190" role="img" aria-label="Illustration of the sensor drift test: the sensor reading drifts upward, the baseline controller's real power falls away from 100 percent, and our controller holds 100 percent.">
+            <path class="axis" d="M70,20 V160 H770"/>
+            <path class="setpt" d="M70,80 H770"/>
+            <path class="tr tr-sensor" pathLength="1" d="M70,80 H230 L740,38"/>
+            <path class="tr tr-base" pathLength="1" d="M70,80 H230 C330,84 520,112 740,136"/>
+            <path class="tr tr-ours" pathLength="1" d="M70,80 H230 C250,84 262,76 280,81 S320,79 360,80 H740"/>
+            <text x="62" y="84" text-anchor="end">100%</text>
+            <text x="230" y="176" text-anchor="middle">drift starts</text><path class="axis" d="M230,156 V164"/>
+            <text x="748" y="32" text-anchor="end">sensor reads 6% high</text>
+            <text x="748" y="72" text-anchor="end" class="t-ours">our controller: real power holds 100%</text>
+            <text x="748" y="156" text-anchor="end" class="t-base">baseline PID: real power falls 2%</text>
+          </svg>
+          <figcaption class="mono">Illustration of the drift test. The measured plots are in the figures below. P_thermal = C_f (T_f − T_c) / (τ_f · P_rated)</figcaption>
+        </figure>
+        <div class="feature-body">
+          <ol class="steps" data-index>
+            <li><h4>The problem</h4><p>The baseline PID controller trusts one power sensor completely. If that sensor drifts, the controller follows it and moves the real reactor away from its target, and nothing in the loop notices.</p></li>
+            <li><h4>Sensor cross-check</h4><p>Fuel runs hotter than coolant in proportion to power, so a heat balance on the temperature sensors gives a second, independent power measurement. The controller tracks the slow difference between neutron and thermal power and corrects for it, capped at 10%.</p></li>
+            <li><h4>Retune and scoring tool</h4><p>We added a two-second filter on the power signal and raised the gain from 3e-4 to 1e-3. A Python scoring tool runs every controller through eight scenarios and grades tracking, rod movement and time in alarm states.</p></li>
+            <li><h4>Results</h4><p>Overall score improved from 2.28 to 2.10 (lower is better). On the drifting sensor, tracking error fell from 1.89 to 0.34 and rod range used dropped from 90% to about 15%. Setpoint changes settle about 20 s faster.</p></li>
+            <li><h4>The dye rig</h4><p>A bench analogue for boron injection: pumps dose dye into a stirred tank and a TCS3200 optical sensor infers concentration by Beer-Lambert, A = ε · l · c. A well-mixed mass balance gives the dosing time, with τ = V / Q = 350 mL / 7 mL/s = 50 s.</p></li>
+            <li><h4>Limits</h4><p>The calibration is only linear at low dose: absorbance flattens near 0.6 to 0.7 after three to four drops. The tank model assumes perfect mixing, and this is a teaching model, not licensing-grade analysis.</p></li>
+          </ol>
+          <div class="figs charts" data-index>
+            <figure class="fig full"><video src="images/reactor-rig.mp4" poster="images/reactor-rig.jpg" controls muted loop autoplay playsinline preload="metadata" aria-label="Video of the dye rig running on a lab bench: a pump doses green dye through tubing into a stirred tank beside a microcontroller."></video><figcaption class="mono">Fig. 1 · Dye rig running (11 s video, no sound)</figcaption></figure>
+            <figure class="fig big"><img src="images/reactor-power.png" alt="Plot of true reactor power during the sensor bias test for the baseline and our controller."><figcaption class="mono">Fig. 2 · True power, drift test</figcaption></figure>
+            <figure class="fig big"><img src="images/reactor-rods.png" alt="Plot of control rod reactivity during the drift test."><figcaption class="mono">Fig. 3 · Control rod reactivity</figcaption></figure>
+            <figure class="fig big"><img src="images/reactor-calibration.png" alt="Six calibration charts of concentration, absorbance and sensor frequency against number of dye drops for two runs."><figcaption class="mono">Fig. 4 · TCS3200 calibration, runs 1 and 2</figcaption></figure>
+            <figure class="fig big"><img src="images/reactor-score.png" alt="Terminal output of the scoring tool listing eight scenarios with scores for each controller."><figcaption class="mono">Fig. 5 · Eight-scenario scorecard</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div class="feature-top">
+          <p class="mono label k-process">Reaction chemistry · ChE 180 Design Studio · Soap Symposium</p>
+          <h3>Fresh Brew'd Soap <span>Coffee soap by saponification</span></h3>
+          <p class="lead">A coffee-themed bar soap my team of 4 formulated, made and presented, using real brewed coffee and coffee grounds as the exfoliant.</p>
+        </div>
+        <figure class="line-fig">
+          <svg viewBox="0 0 800 190" role="img" aria-label="The saponification reaction: a triglyceride plus three sodium hydroxide gives glycerol plus three soap molecules, shown above a pH scale with 8 to 10 highlighted.">
+            <circle class="sbub" cx="361" cy="205" r="5" style="animation-delay:-2.8s;animation-duration:5.2s"/><circle class="sbub" cx="578" cy="205" r="4" style="animation-delay:-2.6s;animation-duration:5.2s"/><circle class="sbub" cx="549" cy="205" r="5" style="animation-delay:-0.3s;animation-duration:6.7s"/><circle class="sbub" cx="101" cy="205" r="5" style="animation-delay:-0.6s;animation-duration:6.7s"/><circle class="sbub" cx="609" cy="205" r="4" style="animation-delay:-6.6s;animation-duration:7.5s"/><circle class="sbub" cx="626" cy="205" r="4" style="animation-delay:-4.0s;animation-duration:6.6s"/><circle class="sbub" cx="256" cy="205" r="4" style="animation-delay:-3.9s;animation-duration:5.5s"/><circle class="sbub" cx="459" cy="205" r="5" style="animation-delay:-3.8s;animation-duration:7.3s"/><circle class="sbub" cx="603" cy="205" r="5" style="animation-delay:-0.7s;animation-duration:7.3s"/><circle class="sbub" cx="222" cy="205" r="6" style="animation-delay:-0.7s;animation-duration:7.8s"/><circle class="sbub" cx="607" cy="205" r="4" style="animation-delay:-4.3s;animation-duration:7.0s"/><circle class="sbub" cx="574" cy="205" r="8" style="animation-delay:-5.4s;animation-duration:6.9s"/><circle class="sbub" cx="494" cy="205" r="6" style="animation-delay:-2.1s;animation-duration:8.2s"/><circle class="sbub" cx="745" cy="205" r="5" style="animation-delay:-0.6s;animation-duration:6.2s"/><circle class="sbub" cx="536" cy="205" r="6" style="animation-delay:-5.1s;animation-duration:6.2s"/><circle class="sbub" cx="104" cy="205" r="4" style="animation-delay:-3.6s;animation-duration:5.7s"/>
+            <text class="eqn" x="400" y="62" text-anchor="middle"><tspan class="rx" style="animation-delay:0s">C₃H₅(OOCR)₃</tspan><tspan class="rx" style="animation-delay:.7s"> + 3 NaOH</tspan><tspan class="rx" style="animation-delay:1.4s"> → </tspan><tspan class="rx" style="animation-delay:2.1s">C₃H₅(OH)₃</tspan><tspan class="rx" style="animation-delay:2.8s"> + 3 RCOONa</tspan></text>
+            <text x="400" y="88" text-anchor="middle">fat or oil + lye → glycerol + soap</text>
+            <text x="180" y="142" text-anchor="end">pH</text>
+            <rect class="ph" x="190" y="128" width="26" height="18"/><text x="203" y="160" text-anchor="middle">0</text><rect class="ph" x="218" y="128" width="26" height="18"/><text x="231" y="160" text-anchor="middle">1</text><rect class="ph" x="246" y="128" width="26" height="18"/><text x="259" y="160" text-anchor="middle">2</text><rect class="ph" x="274" y="128" width="26" height="18"/><text x="287" y="160" text-anchor="middle">3</text><rect class="ph" x="302" y="128" width="26" height="18"/><text x="315" y="160" text-anchor="middle">4</text><rect class="ph" x="330" y="128" width="26" height="18"/><text x="343" y="160" text-anchor="middle">5</text><rect class="ph" x="358" y="128" width="26" height="18"/><text x="371" y="160" text-anchor="middle">6</text><rect class="ph" x="386" y="128" width="26" height="18"/><text x="399" y="160" text-anchor="middle">7</text><rect class="ph on" x="414" y="128" width="26" height="18"/><text x="427" y="160" text-anchor="middle">8</text><rect class="ph on" x="442" y="128" width="26" height="18"/><text x="455" y="160" text-anchor="middle">9</text><rect class="ph on" x="470" y="128" width="26" height="18"/><text x="483" y="160" text-anchor="middle">10</text><rect class="ph" x="498" y="128" width="26" height="18"/><text x="511" y="160" text-anchor="middle">11</text><rect class="ph" x="526" y="128" width="26" height="18"/><text x="539" y="160" text-anchor="middle">12</text><rect class="ph" x="554" y="128" width="26" height="18"/><text x="567" y="160" text-anchor="middle">13</text><rect class="ph" x="582" y="128" width="26" height="18"/><text x="595" y="160" text-anchor="middle">14</text>
+            <text x="620" y="142">our bars: 8 to 10</text>
+          </svg>
+          <figcaption class="mono">Saponification is exothermic, so the reaction's own heat helps drive the cold process forward.</figcaption>
+        </figure>
+        <div class="feature-body">
+          <ol class="steps" data-index>
+            <li><h4>Formulation</h4><p>Five oils: coconut, shea butter, linseed, rice bran and castor. We balanced each between 15% and 25% of the blend, with rice bran oil highest at 25% and coconut at 23%, inside a 500 g batch that includes 190 g of water.</p></li>
+            <li><h4>Soap calculator</h4><p>We built a soap calculator in class and cross-checked it against an online one, then used 95% of the calculated NaOH. Stoichiometry and material balances kept every batch in a safe pH range of 8 to 10.</p></li>
+            <li><h4>Modified cold process</h4><p>We brewed the coffee first and dissolved the lye into it, melted the solid oils and fats to speed things up, then combined everything and let it saponify.</p></li>
+            <li><h4>Result</h4><p>60 g bars with hardness, cleansing, conditioning and lather close to our targets, and conditioning in the high range. Coffee grounds from the V1 cafeteria give a mild scrub.</p></li>
+            <li><h4>Symposium</h4><p>We presented as Group 27 with a poster and a hand-washing station where visitors tried the soaps. The bars are wrapped in compostable unbleached parchment and priced at $3 each.</p></li>
+          </ol>
+          <div class="figs wide" data-index>
+            <figure class="fig big"><img src="images/soap-bars.jpg" alt="Three round bars of Fresh Brew'd Soap, two wrapped in brown parchment with a coffee bean label and one unwrapped."><figcaption class="mono">Fig. 1 · Finished 60 g bars</figcaption></figure>
+            <figure class="fig big"><img src="images/soap-poster.jpg" alt="The team's symposium poster covering ingredients, the soap calculator, rationale and radar charts of soap properties."><figcaption class="mono">Fig. 2 · Symposium poster</figcaption></figure>
+            <figure class="fig big"><img src="images/soap-station.jpg" alt="Muffin trays holding numbered soap samples on a table at the hand-washing station."><figcaption class="mono">Fig. 3 · Hand-washing station</figcaption></figure>
+            <figure class="fig big"><img class="top" src="images/soap-story.jpg" alt="Product sheet titled The Story of Fresh Brew'd Soap describing scent, hardness, lather, mass and price."><figcaption class="mono">Fig. 4 · Product sheet</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div class="feature-top">
+          <p class="mono label k-process">Engineering hackathon · Robotics prototype</p>
+          <h3>PLIC <span>Power Line Ice Cleaner</span></h3>
+          <p class="lead">A small robot that rides along a power line and clears ice before its weight can bring the line down.</p>
+        </div>
+
+        <figure class="line-fig">
+          <svg viewBox="0 0 800 190" role="img" aria-label="Animation of the PLIC robot travelling along a power line between two poles, knocking icicles off as it passes.">
+            <rect class="pole" x="34" y="30" width="10" height="160"/><rect class="pole" x="756" y="30" width="10" height="160"/>
+            <rect class="pole" x="18" y="42" width="42" height="6"/><rect class="pole" x="740" y="42" width="42" height="6"/>
+            <path class="wire" d="M39,70 H761"/>
+            <polygon class="ice" style="animation-delay:0.55s" points="110,71 120,71 115,93"/><polygon class="ice" style="animation-delay:1.09s" points="155,71 165,71 160,99"/><polygon class="ice" style="animation-delay:1.64s" points="200,71 210,71 205,87"/><polygon class="ice" style="animation-delay:2.18s" points="245,71 255,71 250,91"/><polygon class="ice" style="animation-delay:2.73s" points="290,71 300,71 295,91"/><polygon class="ice" style="animation-delay:3.27s" points="335,71 345,71 340,93"/><polygon class="ice" style="animation-delay:3.82s" points="380,71 390,71 385,87"/><polygon class="ice" style="animation-delay:4.36s" points="425,71 435,71 430,87"/><polygon class="ice" style="animation-delay:4.91s" points="470,71 480,71 475,87"/><polygon class="ice" style="animation-delay:5.45s" points="515,71 525,71 520,91"/><polygon class="ice" style="animation-delay:6.00s" points="560,71 570,71 565,97"/><polygon class="ice" style="animation-delay:6.55s" points="605,71 615,71 610,99"/><polygon class="ice" style="animation-delay:7.09s" points="650,71 660,71 655,87"/><polygon class="ice" style="animation-delay:7.64s" points="695,71 705,71 700,93"/>
+            <g class="bot">
+              <rect class="bot-frame" x="-24" y="42" width="48" height="72"/>
+              <g class="wheel"><circle cx="0" cy="58" r="11"/><path d="M-11,58 H11 M0,47 V69"/></g>
+              <g class="wheel"><circle cx="0" cy="82" r="11"/><path d="M-11,82 H11 M0,71 V93"/></g>
+              <rect class="bot-box" x="-24" y="100" width="48" height="14"/>
+            </g>
+            <text x="400" y="176" text-anchor="middle">H₂O(s) · ΔH fus = 6.01 kJ/mol · 334 J per gram to melt</text>
+          </svg>
+          <figcaption class="mono">Melting ice takes 334 J per gram, which is part of why heated lines cost so much to run. PLIC knocks it off mechanically instead.</figcaption>
+        </figure>
+
+        <div class="feature-body">
+          <ol class="steps" data-index>
+            <li><h4>The problem</h4><p>Freezing rain and snow load power lines with ice. The added weight damages or snaps them, and the outage that follows cuts heat, elevators, traffic signals and medical devices. People with disabilities and mobility challenges are hit hardest.</p></li>
+            <li><h4>What exists today</h4><p>Drones, helicopters, climbing crews and heated lines. They are expensive, risky in bad weather, and mostly corrective: they only start after the ice has formed.</p></li>
+            <li><h4>Brainstorm</h4><p>We compared heated cables, mechanical scraping, rotating cleaning wheels and vibration, and worked through the heat transfer math on paper before choosing a mechanical crawler.</p></li>
+            <li><h4>The design</h4><p>Two motor-driven wheels grip the line inside a light frame. The electronics sit at the bottom to keep the centre of mass low, so the robot stays stable on the wire, and line guides reduce error from wind.</p></li>
+            <li><h4>What's next</h4><p>A 3D-printed frame, power harvested from the line's magnetic field plus solar panels, and an ultrasonic sensor in place of the bumper switch to detect the end of the line.</p></li>
+          </ol>
+          <div class="figs" data-index>
+            <figure class="fig big"><img src="images/plic-closeup.jpg" alt="Close-up of the PLIC prototype: a wooden frame holding two yellow motor-driven wheels, with jumper wires running to a microcontroller underneath."><figcaption class="mono">Fig. 1 · Two drive wheels clamp the line</figcaption></figure>
+            <figure class="fig big"><img src="images/plic-wired.jpg" alt="The PLIC prototype held up in a classroom, with its wiring and battery leads hanging below the frame."><figcaption class="mono">Fig. 2 · Wired prototype with electronics at the base</figcaption></figure>
+            <figure class="fig"><img src="images/plic-sketch.jpg" alt="Notebook page with a sketch of the device on a line and handwritten heat transfer equations."><figcaption class="mono">Fig. 3 · Heat transfer notes</figcaption></figure>
+            <figure class="fig"><img src="images/plic-frame.jpg" alt="Early wooden frame of the prototype with two wheels and a motor mounted."><figcaption class="mono">Fig. 4 · First frame</figcaption></figure>
+            <figure class="fig"><img src="images/plic-final.jpg" alt="The final prototype riding along a wooden rod that stands in for a power line."><figcaption class="mono">Fig. 5 · Riding a test line</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div class="feature-top">
+          <p class="mono label k-code">Mechatronics · Brock University</p>
+          <h3>Marble Sorter <span>Autonomous colour sorting and counting</span></h3>
+          <p class="lead">A fully autonomous machine that sorts balls by colour and reports the final count of each. I led the team of 4 that designed and built it.</p>
+        </div>
+        <figure class="line-fig">
+          <svg viewBox="0 0 800 190" role="img" aria-label="Animation of marbles rolling down a chute past a colour sensor, where a gate sends blue marbles to one bin and pink marbles to another.">
+            <path class="wire" d="M60,20 L80,48 M120,20 L100,48"/>
+            <path class="chute" d="M80,56 L400,96 M400,100 L296,138 M400,100 L504,138"/>
+            <path class="bin" d="M256,138 V180 H336 V138"/><path class="bin" d="M464,138 V180 H544 V138"/>
+            <rect class="sensor" x="384" y="46" width="32" height="22"/>
+            <path class="beam-ray" d="M400,68 V92"/>
+            <circle class="marble mb" r="8" style="animation-delay:-0s"/><circle class="marble mp" r="8" style="animation-delay:-1.5s"/><circle class="marble mb" r="8" style="animation-delay:-3s"/><circle class="marble mp" r="8" style="animation-delay:-4.5s"/>
+            <text x="400" y="36" text-anchor="middle">Colour sensor</text>
+            <text x="296" y="128" text-anchor="end">Bin A</text><text x="504" y="128">Bin B</text>
+            <text x="780" y="30" text-anchor="end">98% accuracy · 120 marbles per hour</text>
+          </svg>
+          <figcaption class="mono">Each ball is read by a sensor, then a motor-driven gate routes it to the matching bin and the count goes up.</figcaption>
+        </figure>
+        <div class="feature-body">
+          <ol class="steps" data-index>
+            <li><h4>The goal</h4><p>Take a mixed batch of balls, sort them by colour with no human input, and determine the final count of each colour.</p></li>
+            <li><h4>Concepts</h4><p>We started with sketches and proofs of concept: a pressure detector, a distance detector and a ball cage. Those turned into test parts before we committed to a full design.</p></li>
+            <li><h4>Construction</h4><p>We built one design concept as a test, then implemented it in the full machine with sensors and motor-servo actuators on a robotics kit.</p></li>
+            <li><h4>Result</h4><p>98% sorting accuracy at 120 marbles per hour, which beat our performance target by 25%.</p></li>
+            <li><h4>What I'd fix</h4><p>The holding component at the start isn't secured well, and some connectors sit together instead of actually restricting movement. A rebuild would lock those joints properly.</p></li>
+          </ol>
+          <div class="figs" data-index>
+            <figure class="fig big"><img src="images/sorter-built.jpg" alt="The finished sorting mechanism built from pink, blue and yellow robotics kit parts with a motor and sensor mounted."><figcaption class="mono">Fig. 1 · Design concept after implementation</figcaption></figure>
+            <figure class="fig big"><img src="images/sorter-machine.jpg" alt="Top view of the marble sorter showing the chute and sorting arms."><figcaption class="mono">Fig. 2 · The sorting chute</figcaption></figure>
+            <figure class="fig"><img src="images/sorter-sketch.jpg" alt="Pencil sketch on lined paper labelled Ball Cage."><figcaption class="mono">Fig. 3 · Ball cage sketch</figcaption></figure>
+            <figure class="fig"><img src="images/sorter-test.jpg" alt="An early test build of one design concept on a lab bench."><figcaption class="mono">Fig. 4 · Test build</figcaption></figure>
+            <figure class="fig"><img src="images/sorter-flaw.jpg" alt="Close-up of connectors that rest together without locking."><figcaption class="mono">Fig. 5 · Loose connectors</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <h3 class="more">More projects</h3>
+      <div class="work" data-stagger>
+        <article class="card">
+          <p class="mono label k-process">Process simulation · CHE 290</p>
+          <h3>CO₂ capture process simulation</h3>
+          <p>Built a post-combustion absorption model with a RadFrac column and MEA solvent, then expanded it to a multi-unit flowsheet with amine regeneration, flash separation and two-stage compression. Compared the Amines property method against NRTL and Chao-Seader, and calculated percent capture, steam duty and annualized operating cost.</p>
+          <p class="rxn">Aspen Plus V14 · RadFrac · Amines vs NRTL</p>
+        </article>
+        <article class="card">
+          <p class="mono label">Research · UWNRG</p>
+          <h3>Micro and nano-scale robotics</h3>
+          <p>Lead subprojects designing micro- and nano-scale robotic systems with the University of Waterloo Nanorobotics Group, coordinating a team of 5. Our functional prototypes were demonstrated at 2 major showcases.</p>
+          <p class="rxn">Team of 5 · 2 showcases</p>
+        </article>
+      </div>
+      <a class="btn next" href="#experience" data-go="experience">Next: Experience →</a>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section class="page" id="p-experience" hidden>
+      <div class="head">
+        <h2>Experience</h2>
+      </div>
+      <ul class="xp" data-index>
+        <li>
+          <span class="mono">May 2026 – Sep 2026</span>
+          <div>
+            <h3>AI/Automation Engineering Intern</h3>
+            <div class="org">Netnow (part of Blackline Inc) · Toronto, ON</div>
+            <p>Built and shipped AI automation used in production, including a conversational AI agent and a data pipeline that turns information from multiple sources into summaries. Also built an internal review tool for non-technical staff and contributed to content strategy.</p>
+          </div>
+        </li>
+        <li>
+          <span class="mono">Sep 2025 – Present</span>
+          <div>
+            <h3>Lab Researcher, Chemistry Team</h3>
+            <div class="org">University of Waterloo Nanorobotics Group · Waterloo, ON</div>
+            <p>Lead subprojects in micro- and nano-scale robot design, assigning tasks, tracking progress and troubleshooting design issues for a team of 5.</p>
+          </div>
+        </li>
+        <li>
+          <span class="mono">Apr 2025 – Sep 2025</span>
+          <div>
+            <h3>3D Modeling Designer</h3>
+            <div class="org">KrocoPrint · St. Catharines, ON</div>
+            <p>Modeled parts in AutoCAD and Fusion 360 for 10+ additive manufacturing projects, improving print accuracy by 15%. Produced 50+ custom video game accessories and raised repeat orders by 20%.</p>
+          </div>
+        </li>
+        <li>
+          <span class="mono">Jan 2025 – Jun 2025</span>
+          <div>
+            <h3>Pharmacy Laboratory Assistant</h3>
+            <div class="org">Shoppers Drug Mart · St. Catharines, ON</div>
+            <p>Ran labeling and packaging for 500+ prescriptions a week with zero compliance errors, and helped 400+ clients in person.</p>
+          </div>
+        </li>
+        <li>
+          <span class="mono">Nov 2024 – Mar 2025</span>
+          <div>
+            <h3>Lab Assistant</h3>
+            <div class="org">Brock University · St. Catharines, ON</div>
+            <p>Prepared lab stations for 4 student groups and cut setup time from 10 to 8 minutes per group. Pre-portioned chemicals and staggered start times so every group finished inside the 75-minute period.</p>
+          </div>
+        </li>
+        <li>
+          <span class="mono">Jun 2022 – Mar 2025</span>
+          <div>
+            <h3>Teaching Assistant</h3>
+            <div class="org">Niagara Korean Language School · St. Catharines, ON</div>
+            <p>Supported Korean language classes for elementary and middle school students. Prepared learning materials, helped lead teachers run lessons and gave one-on-one support in reading, writing and speaking.</p>
+          </div>
+        </li>
+        <li>
+          <span class="mono">Sep 2025 – May 2030</span>
+          <div>
+            <h3>BASc, Chemical Engineering</h3>
+            <div class="org">University of Waterloo · Waterloo, ON</div>
+            <p>Coursework includes Engineering Concepts, Engineering Design Studio and collaborative laboratory courses.</p>
+          </div>
+        </li>
+      </ul>
+      <a class="btn next" href="#skills" data-go="skills">Next: Skills →</a>
+    </section>
+
+    <!-- SKILLS -->
+    <section class="page" id="p-skills" hidden>
+      <div class="head">
+        <h2>Skills</h2>
+        <div class="legend mono">
+          <span class="k-process">Process and CAD</span>
+          <span class="k-code">Code and AI</span>
+          <span>Lab</span>
+        </div>
+      </div>
+      <ul class="elements" data-index>
+        <li class="el k-process"><b>Ap</b><span>Aspen Plus</span></li>
+        <li class="el k-process"><b>Ac</b><span>AutoCAD</span></li>
+        <li class="el k-process"><b>Fu</b><span>Fusion 360</span></li>
+        <li class="el k-process"><b>Sw</b><span>SolidWorks</span></li>
+        <li class="el k-process"><b>Mb</b><span>Material balances</span></li>
+        <li class="el k-code"><b>Py</b><span>Python</span></li>
+        <li class="el k-code"><b>P3</b><span>Processing 3</span></li>
+        <li class="el k-code"><b>N8</b><span>n8n workflows</span></li>
+        <li class="el k-code"><b>El</b><span>ElevenLabs voice AI</span></li>
+        <li class="el k-code"><b>Tw</b><span>Twilio</span></li>
+        <li class="el"><b>Ti</b><span>Titration</span></li>
+        <li class="el"><b>Sp</b><span>Solution preparation</span></li>
+        <li class="el"><b>St</b><span>Stoichiometry</span></li>
+        <li class="el"><b>Rh</b><span>Reagent handling</span></li>
+        <li class="el"><b>Ls</b><span>Lab safety</span></li>
+      </ul>
+      <a class="btn next" href="#contact" data-go="contact">Next: Contact →</a>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="page" id="p-contact" hidden>
+      <div class="head">
+        <h2>Get in touch</h2>
+      </div>
+      <div class="contact">
+        <div>
+          <p>Want to talk about chemical engineering, process simulation or a project of mine? Email is the fastest way to reach me.</p>
+          <div class="email-row">
+            <span class="email" id="email">b46kim@uwaterloo.ca</span>
+            <button class="btn" id="copy-email" type="button">Copy email</button>
+          </div>
+          <div class="links">
+            <a class="btn" href="https://www.linkedin.com/in/bradley-kim-8473182b3">LinkedIn</a>
+            <a class="btn" href="https://github.com/imboseung-ux">GitHub</a>
+          </div>
+        </div>
+        <svg class="flask" viewBox="0 0 120 140" role="img" aria-label="An Erlenmeyer flask whose solution turns from blue to pink">
+          <defs><clipPath id="flask-clip"><path d="M46,12 H74 V52 L106,118 Q111,130 98,130 H22 Q9,130 14,118 L46,52 Z"/></clipPath></defs>
+          <g clip-path="url(#flask-clip)">
+            <rect class="liquid" x="0" y="84" width="120" height="50"/>
+            <circle class="bub" cx="48" cy="120" r="3"/>
+            <circle class="bub" cx="64" cy="124" r="2.2"/>
+            <circle class="bub" cx="76" cy="118" r="2.8"/>
+          </g>
+          <path class="glass" d="M46,12 H74 V52 L106,118 Q111,130 98,130 H22 Q9,130 14,118 L46,52 Z"/>
+          <path class="glass" d="M40,12 H80"/>
+        </svg>
+      </div>
+    </section>
+  </main>
+
+  <footer class="mono">
+    <span>Bk is also berkelium, element 97. Outside the lab: hackathons, chess and soccer.</span>
+    <span>Use the ← → keys to change pages. <a href="#start" data-go="start">Replay the puzzle</a></span>
+  </footer>
+</div>
+
+<div id="lightbox" hidden role="dialog" aria-label="Enlarged photo">
+  <img id="lb-img" src="" alt="">
+  <p class="mono" id="lb-cap"></p>
+  <button class="btn" type="button" id="lb-close">Close</button>
+</div>
+
+<div class="wipe" aria-hidden="true">
+  <div class="layer w1"></div>
+  <div class="layer w2"></div>
+  <div class="wipe-label" id="wipe-label"></div>
+</div>
+
+<script>
+(function () {
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- stagger indexes and letter split ---------- */
+  document.querySelectorAll('[data-stagger], [data-index]').forEach(function (group) {
+    Array.prototype.forEach.call(group.children, function (el, i) { el.style.setProperty('--i', i); });
+  });
+  var n = 0;
+  document.querySelectorAll('h1 .ln').forEach(function (ln) {
+    var text = ln.textContent; ln.textContent = '';
+    text.split('').forEach(function (c) {
+      var s = document.createElement('span');
+      s.className = 'ch'; s.setAttribute('aria-hidden', 'true');
+      s.textContent = c; s.style.setProperty('--i', n++);
+      ln.appendChild(s);
+    });
+  });
+
+  /* ---------- page router with liquid transition ---------- */
+  var pages = ['start', 'home', 'about', 'work', 'experience', 'skills', 'contact'];
+  var titles = { start: 'Puzzle', home: 'Bk', about: 'About', work: 'Projects', experience: 'Experience', skills: 'Skills', contact: 'Contact' };
+  var current = null, busy = false;
+  var w1 = document.querySelector('.w1'), w2 = document.querySelector('.w2');
+  var label = document.getElementById('wipe-label');
+  var EASE = 'cubic-bezier(.7,0,.3,1)';
+
+  function show(name) {
+    pages.forEach(function (p) { document.getElementById('p-' + p).hidden = (p !== name); });
+    document.querySelectorAll('nav [data-go]').forEach(function (a) {
+      if (a.dataset.go === name) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+    current = name;
+    window.scrollTo(0, 0);
+    try { history.replaceState(null, '', '#' + name); } catch (e) {}
+  }
+  function go(name) {
+    if (pages.indexOf(name) < 0 || name === current || busy) return;
+    if (reduced || !w1.animate) { show(name); return; }
+    busy = true;
+    label.textContent = titles[name];
+    var up = [{ transform: 'translateY(100%)' }, { transform: 'translateY(-12%)' }];
+    var off = [{ transform: 'translateY(-12%)' }, { transform: 'translateY(-112%)' }];
+    w1.animate(up, { duration: 460, easing: EASE, fill: 'forwards' });
+    w2.animate(up, { duration: 460, delay: 110, easing: EASE, fill: 'forwards' });
+    label.animate([{ opacity: 0, transform: 'translateY(30px)' }, { opacity: 1, transform: 'none' }], { duration: 260, delay: 300, easing: 'ease-out', fill: 'forwards' });
+    setTimeout(function () {
+      show(name);
+      label.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 180, fill: 'forwards' });
+      w2.animate(off, { duration: 460, easing: EASE, fill: 'forwards' });
+      w1.animate(off, { duration: 460, delay: 110, easing: EASE, fill: 'forwards' });
+    }, 760);
+    setTimeout(function () { busy = false; }, 1340);
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('[data-go]') : null;
+    if (a) { e.preventDefault(); go(a.dataset.go); }
+  });
+  window.addEventListener('hashchange', function () { go(location.hash.slice(1)); });
+  document.addEventListener('keydown', function (e) {
+    if (current === 'start' || !lb.hidden) return;
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    var i = pages.indexOf(current);
+    if (e.key === 'ArrowRight' && i < pages.length - 1) go(pages[i + 1]);
+    if (e.key === 'ArrowLeft' && i > 1) go(pages[i - 1]);
+  });
+  var start = location.hash.slice(1);
+  show(pages.indexOf(start) >= 0 ? start : 'start');
+
+  /* ---------- entry puzzle: balance CH4 + O2 -> CO2 + H2O ---------- */
+  var co = [1, 1, 1, 1], solved = false;
+  var pzPage = document.getElementById('p-start'), beam = document.getElementById('pz-beam');
+  var msg = document.getElementById('pz-msg'), enter = document.getElementById('pz-enter');
+  function chip(id, sym, l, r) {
+    var el = document.getElementById(id);
+    el.textContent = sym + ' ' + l + (l === r ? ' = ' : ' \u2260 ') + r;
+    el.classList.toggle('ok', l === r);
+    return l === r;
+  }
+  function pzUpdate() {
+    var a = co[0], b = co[1], c = co[2], d = co[3];
+    var okC = chip('pz-C', 'C', a, c), okH = chip('pz-H', 'H', 4 * a, 2 * d), okO = chip('pz-O', 'O', 2 * b, 2 * c + d);
+    var L = 5 * a + 2 * b, R = 3 * c + 3 * d;
+    document.getElementById('pz-l').textContent = L + ' atoms';
+    document.getElementById('pz-r').textContent = R + ' atoms';
+    beam.style.transform = 'rotate(' + Math.max(-12, Math.min(12, (R - L) * 2.2)) + 'deg)';
+    if (okC && okH && okO && !solved) {
+      solved = true;
+      pzPage.classList.add('solved');
+      document.querySelectorAll('#pz-eq button').forEach(function (b2) { b2.disabled = true; });
+      msg.textContent = 'Balanced. The lab door is open.';
+      enter.hidden = false;
+      for (var k = 0; k < 7; k++) setTimeout(function () { burst(rnd(W * 0.1, W * 0.9), rnd(H * 0.1, H * 0.9), 22); }, k * 110);
+      setTimeout(function () { if (current === 'start') go('experience'); }, 1700);
+    }
+  }
+  document.getElementById('pz-eq').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || solved) return;
+    var t = +b.dataset.t, v = co[t] + (+b.dataset.d);
+    if (v < 1 || v > 6) return;
+    co[t] = v;
+    var out = document.getElementById('pz-c' + t);
+    out.textContent = v;
+    out.classList.remove('pop'); void out.offsetWidth; out.classList.add('pop');
+    msg.textContent = '';
+    pzUpdate();
+  });
+  document.getElementById('pz-hint').addEventListener('click', function () {
+    if (!solved) msg.textContent = 'Hint: leave CH\u2084 at 1. Fix hydrogen with H\u2082O first, then count the oxygen.';
+  });
+
+  /* ---------- 3D tilt on work cards ---------- */
+  if (!reduced) document.querySelectorAll('.card').forEach(function (card) {
+    card.addEventListener('pointermove', function (e) {
+      if (e.pointerType !== 'mouse') return;
+      var r = card.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      card.style.transform = 'perspective(700px) rotateX(' + (-y * 9) + 'deg) rotateY(' + (x * 9) + 'deg) translate(-4px, -4px)';
+    });
+    card.addEventListener('pointerleave', function () { card.style.transform = ''; });
+  });
+
+  /* ---------- photo lightbox ---------- */
+  var lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img'), lbCap = document.getElementById('lb-cap');
+  function openLb(img) {
+    lbImg.src = img.getAttribute('src'); lbImg.alt = img.alt;
+    lbCap.textContent = img.parentNode.querySelector('figcaption').textContent;
+    lb.hidden = false; document.getElementById('lb-close').focus();
+  }
+  document.querySelectorAll('.fig img').forEach(function (img) {
+    img.tabIndex = 0; img.setAttribute('role', 'button');
+    img.addEventListener('click', function () { openLb(img); });
+    img.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLb(img); } });
+  });
+  lb.addEventListener('click', function () { lb.hidden = true; });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') lb.hidden = true; });
+
+  /* ---------- copy email ---------- */
+  var btn = document.getElementById('copy-email');
+  var email = document.getElementById('email');
+  btn.addEventListener('click', function () {
+    function selectText() {
+      var r = document.createRange(); r.selectNodeContents(email);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Selected, press copy';
+    }
+    try {
+      navigator.clipboard.writeText(email.textContent).then(function () { btn.textContent = 'Copied'; }, selectText);
+    } catch (err) { selectText(); }
+    setTimeout(function () { btn.textContent = 'Copy email'; }, 2500);
+  });
+
+  /* ---------- drifting molecules ---------- */
+  var cv = document.getElementById('molecules');
+  var ctx = cv.getContext('2d');
+  var W = 0, H = 0, T = {}, mols = [], bubbles = [], parts = [], frame = 0;
+  var ptr = { x: -9999, y: -9999 };
+
+  function hex(k) {
+    var a = [], i;
+    for (i = 0; i < 6; i++) { var t = i * Math.PI / 3; a.push([k, Math.cos(t) * 24, Math.sin(t) * 24]); }
+    return a;
+  }
+  var KINDS = [
+    { atoms: [['O', -26, 0], ['C', 0, 0], ['O', 26, 0]], bonds: [[0, 1, 2], [1, 2, 2]] },                       // CO2
+    { atoms: [['O', 0, -4], ['H', -18, 12], ['H', 18, 12]], bonds: [[0, 1, 1], [0, 2, 1]] },                     // H2O
+    { atoms: [['O', -39, 8], ['C', -13, -8], ['C', 13, 8], ['N', 39, -8]], bonds: [[0, 1, 1], [1, 2, 1], [2, 3, 1]] }, // MEA backbone
+    { atoms: [['Na', -27, 0], ['O', 0, 0], ['H', 20, 11]], bonds: [[0, 1, 1], [1, 2, 1]] },                      // NaOH
+    { atoms: hex('C'), bonds: [[0, 1, 2], [1, 2, 1], [2, 3, 2], [3, 4, 1], [4, 5, 2], [5, 0, 1]] },              // benzene ring
+    { atoms: [['C', 0, 0], ['H', -17, -17], ['H', 17, -17], ['H', -17, 17], ['H', 17, 17]], bonds: [[0, 1, 1], [0, 2, 1], [0, 3, 1], [0, 4, 1]] } // CH4
+  ];
+  var RADIUS = { H: 6, C: 8.5, O: 8.5, N: 8.5, Na: 10.5 };
+
+  function tokens() {
+    var cs = getComputedStyle(document.documentElement);
+    ['ink', 'muted', 'blue', 'pink', 'bg'].forEach(function (k) { T[k] = cs.getPropertyValue('--' + k).trim(); });
+    T.el = { C: T.ink, O: T.pink, N: T.blue, Na: T.blue, H: T.muted };
+  }
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function burst(x, y, n) {
+    if (reduced) return;
+    for (var i = 0; i < n; i++) {
+      var t = rnd(0, 6.2832), sp = rnd(1.5, 6);
+      parts.push({ x: x, y: y, vx: Math.cos(t) * sp, vy: Math.sin(t) * sp, life: 1, r: rnd(2, 5.5), c: Math.random() < 0.5 ? 'pink' : 'blue' });
+    }
+    mols.forEach(function (m) {
+      var dx = m.x - x, dy = m.y - y, d = Math.sqrt(dx * dx + dy * dy) || 1;
+      if (d < 260) { var f = (1 - d / 260) * 9; m.px += dx / d * f; m.py += dy / d * f; m.spin += rnd(-0.02, 0.02); }
+    });
+  }
+  function makeMol() {
+    return { k: KINDS[Math.floor(Math.random() * KINDS.length)], x: rnd(0, W), y: rnd(0, H),
+      vx: rnd(-0.18, 0.18), vy: rnd(-0.32, -0.08), px: 0, py: 0,
+      a: rnd(0, 6.28), spin: rnd(-0.004, 0.004), s: rnd(0.9, 1.7) };
+  }
+  function resize() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var want = Math.max(7, Math.min(24, Math.round(W * H / 62000)));
+    while (mols.length < want) mols.push(makeMol());
+    mols.length = want;
+    while (bubbles.length < 16) bubbles.push({ x: rnd(0, W), y: rnd(0, H), r: rnd(2, 6), v: rnd(0.35, 0.9), ph: rnd(0, 6.28) });
+    if (reduced) draw();
+  }
+  function drawMol(m) {
+    var A = m.k.atoms, i;
+    ctx.save();
+    ctx.translate(m.x, m.y); ctx.rotate(m.a); ctx.scale(m.s, m.s);
+    ctx.lineWidth = 1.6; ctx.strokeStyle = T.ink;
+    m.k.bonds.forEach(function (b) {
+      var p = A[b[0]], q = A[b[1]];
+      if (b[2] === 2) {
+        var dx = q[1] - p[1], dy = q[2] - p[2], L = Math.sqrt(dx * dx + dy * dy) || 1;
+        var ox = -dy / L * 2.6, oy = dx / L * 2.6;
+        ctx.beginPath();
+        ctx.moveTo(p[1] + ox, p[2] + oy); ctx.lineTo(q[1] + ox, q[2] + oy);
+        ctx.moveTo(p[1] - ox, p[2] - oy); ctx.lineTo(q[1] - ox, q[2] - oy);
+        ctx.stroke();
+      } else {
+        ctx.beginPath(); ctx.moveTo(p[1], p[2]); ctx.lineTo(q[1], q[2]); ctx.stroke();
+      }
+    });
+    for (i = 0; i < A.length; i++) {
+      var el = A[i][0];
+      ctx.fillStyle = T.el[el];
+      ctx.beginPath(); ctx.arc(A[i][1], A[i][2], RADIUS[el], 0, 6.2832); ctx.fill();
+      ctx.save();
+      ctx.translate(A[i][1], A[i][2]); ctx.rotate(-m.a);
+      ctx.fillStyle = T.bg; ctx.fillText(el, 0, 0.5);
+      ctx.restore();
+    }
+    ctx.restore();
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.font = '500 8px "IBM Plex Mono", monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.globalAlpha = 0.3; ctx.strokeStyle = T.blue; ctx.lineWidth = 1.2;
+    bubbles.forEach(function (b) {
+      ctx.beginPath(); ctx.arc(b.x + Math.sin(b.ph) * 6, b.y, b.r, 0, 6.2832); ctx.stroke();
+    });
+    ctx.globalAlpha = 0.42;
+    mols.forEach(drawMol);
+    parts.forEach(function (q) {
+      ctx.globalAlpha = Math.max(0, q.life) * 0.85; ctx.fillStyle = T[q.c];
+      ctx.beginPath(); ctx.arc(q.x, q.y, q.r, 0, 6.2832); ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+  }
+  function step() {
+    frame++;
+    if (frame % 90 === 0) tokens();
+    mols.forEach(function (m) {
+      var dx = m.x - ptr.x, dy = m.y - ptr.y, d = Math.sqrt(dx * dx + dy * dy);
+      if (d < 160 && d > 0.1) { var f = (1 - d / 160) * 0.7; m.px += dx / d * f; m.py += dy / d * f; m.spin += (dx > 0 ? 1 : -1) * 0.0004; }
+      m.px *= 0.94; m.py *= 0.94;
+      m.spin = Math.max(-0.02, Math.min(0.02, m.spin));
+      m.x += m.vx + m.px; m.y += m.vy + m.py; m.a += m.spin;
+      if (m.y < -90) { m.y = H + 90; m.x = rnd(0, W); }
+      if (m.y > H + 100) m.y = -80;
+      if (m.x < -90) m.x = W + 90;
+      if (m.x > W + 90) m.x = -90;
+    });
+    parts = parts.filter(function (q) {
+      q.x += q.vx; q.y += q.vy; q.vx *= 0.96; q.vy *= 0.96; q.life -= 0.022;
+      return q.life > 0;
+    });
+    bubbles.forEach(function (b) {
+      b.y -= b.v; b.ph += 0.03;
+      if (b.y < -10) { b.y = H + 10; b.x = rnd(0, W); }
+    });
+    draw();
+    if (!document.hidden) requestAnimationFrame(step); else paused = true;
+  }
+  var paused = false;
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden && paused && !reduced) { paused = false; requestAnimationFrame(step); }
+  });
+  window.addEventListener('pointermove', function (e) { ptr.x = e.clientX; ptr.y = e.clientY; });
+  window.addEventListener('pointerdown', function (e) { burst(e.clientX, e.clientY, 16); });
+  window.addEventListener('pointerleave', function () { ptr.x = ptr.y = -9999; });
+  window.addEventListener('resize', resize);
+  tokens(); resize();
+  if (reduced) draw(); else requestAnimationFrame(step);
+})();
+</script>
+
+</body>
+</html>
